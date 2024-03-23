@@ -51,7 +51,6 @@ function validateInput(email, fullName, password) {
 
 
 router.post('/create', async (req, res) => {
-  console.log(req.body);
   const { fullName, email, password } = req.body;
   const validationErrors = validateInput(email, fullName, password);
   if (Object.keys(validationErrors).length) {
@@ -78,6 +77,10 @@ router.post('/create', async (req, res) => {
 
 router.put('/edit', async (req, res) => {
   const { email, fullName, password } = req.body;
+  const validationErrors = validateInput(email, fullName, password);
+  if (Object.keys(validationErrors).length) {
+    return res.status(400).json({ errors: validationErrors });
+  }
   try {
     const user = await User.findOne({ email });
     if (!user) {
